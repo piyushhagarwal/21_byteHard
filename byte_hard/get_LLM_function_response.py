@@ -4,6 +4,29 @@ from together import Together
 # Initialize the API client with your Together API key
 client = Together(api_key='750bb823966720936d0334dc1ccfa3895dedde33ede71e0edf30028d6dae8249')
 
+import re
+import json
+
+def extract_function_names_from_string(input_string):
+    # Use regex to find the JSON string within the triple backticks
+    pattern = r'```json\s*(\{.*?\})\s*```'
+    match = re.search(pattern, input_string, re.DOTALL)
+
+    if match:
+        json_string = match.group(1)  # Extract the JSON string
+        try:
+            # Convert the JSON string into a dictionary
+            json_dict = json.loads(json_string)
+            # Extract the function names list
+            function_names = json_dict.get("function_names", [])
+            return function_names
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON: {e}")
+            return []
+    else:
+        return []
+
+
 # Function to generate audit and remediation scripts from compliance JSON data for mac and linux
 def get_function_names(updates, code_file_content, model_id="mistralai/Mistral-7B-Instruct-v0.3", max_tokens=1000, temperature=0.0):
     
@@ -18,7 +41,9 @@ def get_function_names(updates, code_file_content, model_id="mistralai/Mistral-7
       
       Give the output in structured json format
       ```json
+      {{
         "function_names" : []
+      }}
       ```
     """
 
@@ -43,7 +68,13 @@ def get_function_names(updates, code_file_content, model_id="mistralai/Mistral-7
     output = response.choices[0].message.content
     print(f"Model output: {output}")
     
-    return output
+    
+    # Extract the function names from the generated output
+    function_names = extract_function_names_from_string(output)
+    
+    print(f"Extracted function names: {function_names}")
+    
+    return function_names
 
 # if __name__ == "__main__":
 #     updates = '''
