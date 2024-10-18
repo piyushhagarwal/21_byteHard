@@ -13,26 +13,34 @@ def get_file_content(path):
         "X-GitHub-Api-Version": "2022-11-28"
     }
     
+    print(f"Fetching file content for path: {path}")
     response = requests.get(url, headers=headers)
     
     if response.status_code == 200:
         content_data = response.json()
+        print(f"File content fetched successfully for: {path}")
         # Decode Base64 content
         file_content = base64.b64decode(content_data['content']).decode('utf-8')
         return file_content
     else:
-        return "Error in fetching file_content"
-
+        print(f"Error in fetching file content for {path}, Status code: {response.status_code}")
+        return None
 
 def extract_info(data):
+    print(f"Extracting patch info and file content for each changed file...")
     result = {}
     for item in data:
         filename = item['filename']
         
-        result[filename] = {
-            'patch': item['patch'],
-            'file_content': get_file_content(filename)
-        }
+        print(f"Processing file: {filename}")
+        file_content = get_file_content(filename)
+        if file_content:
+            result[filename] = {
+                'patch': item['patch'],
+                'file_content': file_content
+            }
+        else:
+            print(f"Failed to fetch content for file: {filename}")
     return result
 
 def get_files_changed(commit_sha):
@@ -44,24 +52,27 @@ def get_files_changed(commit_sha):
         "X-GitHub-Api-Version": "2022-11-28"
     }
 
+    print(f"Fetching changed files for commit: {commit_sha}")
     response = requests.get(url, headers=headers)
+    
     if response.status_code == 200:
-        output = response.json() # Return the list of commits
+        output = response.json()  # Return the list of commits
+        print(f"Successfully fetched changed files for commit: {commit_sha}")
         output_dict = extract_info(output['files'])
         return output_dict
     else:
-        return {"error": f"Failed to fetch commits. Status code: {response.status_code}"}
-
+        print(f"Error: Failed to fetch commit details. Status code: {response.status_code}")
+        return {"error": f"Failed to fetch commit. Status code: {response.status_code}"}
 
 # if __name__ == "__main__":
-#     sha = "6323b3a8e4637974186d1127ca3f7e0793c5e4bb"
-#     output = get_files_changed(sha)
-#     pretty_json = json.dumps(output, indent=4)
-#     print(pretty_json)
+#     if len(sys.argv) != 2:
+#         print("Usage: python script.py <commit_sha>")
+#         sys.exit(1)
+
+#     commit_sha = sys.argv[1]
+#     print(f"Starting to process commit: {commit_sha}")
+
+#     changed_files = get_files_changed(commit_sha)
     
-    
-if __name__ == "__main__":
-    commit_sha = sys.argv[1]
-    changed_files = get_files_changed(commit_sha)
-    
-    print(f"Changed test files: {changed_files}")
+#     print(f"Changed test files: {json.dumps(changed_files, indent=4)}")
+#     print("Process completed.")
