@@ -1,7 +1,6 @@
 # src/file1.py
 def add(a, b):
-    sum = a + b
-    return sum
+    return a + b
 
 def subtract(a, b):
     return a - b
