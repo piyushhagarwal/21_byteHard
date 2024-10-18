@@ -1,6 +1,7 @@
 import requests
 import json
 import base64
+import sys
 
 def get_file_content(path):
     token = "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"
@@ -52,11 +53,11 @@ def get_files_changed(commit_sha):
         return {"error": f"Failed to fetch commits. Status code: {response.status_code}"}
 
 
-if __name__ == "__main__":
-    sha = "6323b3a8e4637974186d1127ca3f7e0793c5e4bb"
-    output = get_files_changed(sha)
-    pretty_json = json.dumps(output, indent=4)
-    print(pretty_json)
+# if __name__ == "__main__":
+#     sha = "6323b3a8e4637974186d1127ca3f7e0793c5e4bb"
+#     output = get_files_changed(sha)
+#     pretty_json = json.dumps(output, indent=4)
+#     print(pretty_json)
     
     
 if __name__ == "__main__":
