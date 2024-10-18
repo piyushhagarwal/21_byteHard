@@ -1,0 +1,31 @@
+name: Run Tests on Commit
+
+on:
+  push:
+    branches:
+      - main # You can change this to the branch you want to trigger on
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python (if tests are Python based)
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Get commit SHA
+        id: get_commit
+        run: echo "COMMIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      - name: Get changed files and run tests
+        run: |
+          python byte_hard/get_changed_files.py ${{ env.COMMIT_SHA }}
