@@ -30,7 +30,7 @@ def extract_info(data):
         filename = item['filename']
         
         result[filename] = {
-            'changes': item['changes'],
+            'patch': item['patch'],
             'file_content': get_file_content(filename)
         }
     return result
