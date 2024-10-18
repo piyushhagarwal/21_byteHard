@@ -30,6 +30,7 @@ def generate_random_string(length=10):
     """Generate a random string of specified length."""
     if length <= 0:
         raise ValueError("Length must be positive.")
+    # Letters to choose from for generating random string
     letters = string.ascii_letters
     return ''.join(random.choice(letters) for _ in range(length))
 
@@ -115,6 +116,7 @@ def matrix_multiplication(A, B):
         raise ValueError("Incompatible matrix dimensions for multiplication.")
     result = [[0 for _ in range(len(B[0]))] for _ in range(len(A))]
     
+    # Perform matrix multiplication
     for i in range(len(A)):
         for j in range(len(B[0])):
             for k in range(len(B)):
