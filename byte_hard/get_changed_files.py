@@ -18,15 +18,9 @@ def get_file_content(path):
         content_data = response.json()
         # Decode Base64 content
         file_content = base64.b64decode(content_data['content']).decode('utf-8')
-        return {
-            'content': file_content,
-            'message': 'File content retrieved successfully.'
-        }
+        return file_content
     else:
-        return {
-            'error': response.json(),
-            'message': 'Failed to retrieve file content.'
-        }
+        return "Error in fetching file_content"
 
 
 def extract_info(data):
@@ -59,6 +53,14 @@ def get_files_changed(commit_sha):
 
 
 if __name__ == "__main__":
-    sha = "f8892169b794656f4d3540480fcec8676b805c98"
+    sha = "6323b3a8e4637974186d1127ca3f7e0793c5e4bb"
     output = get_files_changed(sha)
-    print(output)
+    pretty_json = json.dumps(output, indent=4)
+    print(pretty_json)
+    
+    
+if __name__ == "__main__":
+    commit_sha = sys.argv[1]
+    changed_files = get_files_changed(commit_sha)
+    
+    print(f"Changed test files: {changed_files}")
