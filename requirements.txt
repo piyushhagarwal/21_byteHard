@@ -1,2 +1,5 @@
 requests
 together
+fastapi 
+uvicorn 
+requests
