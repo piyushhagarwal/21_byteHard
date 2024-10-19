@@ -11,4 +11,4 @@ def test_average():
 
 def test_advanced_math_operations():
     result = advanced_math_operations(2, 3)
-    assert result == (5, 6, True, 216)  # math_operations(2, 3) -> cube(6) == 216
+    assert result == (5, 6, True, 216)  
