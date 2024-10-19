@@ -17,7 +17,7 @@ def fibonacci(n):
     """Return the nth Fibonacci number using memoization."""
     @lru_cache(maxsize=None)
     def fib(n):
-        # Check for 0 condition
+        # Check with 0 condition
         if n < 0:
             raise ValueError("Fibonacci is not defined for negative numbers.")
         if n <= 1:
@@ -89,7 +89,7 @@ def merge_sort(arr):
 
         i = j = k = 0
 
-        # Checking with while
+        # Merge the two halves
         while i < len(left_half) and j < len(right_half):
             if left_half[i] < right_half[j]:
                 arr[k] = left_half[i]
