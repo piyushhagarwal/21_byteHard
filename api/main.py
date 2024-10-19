@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Header, HTTPException
 import requests
+import os
 from pydantic import BaseModel, Field
 from typing import Dict, Any
 from fastapi.middleware.cors import CORSMiddleware
@@ -64,34 +65,52 @@ class FileData(BaseModel):
 class ChangedFilesBody(BaseModel):
     changed_files: Dict[str, FileData]
 
+def find_test_files_with_functions(test_folder, function_names):
+    matching_files = {}
+    # Traverse the test folder recursively
+    for root, dirs, files in os.walk(test_folder):
+        for file in files:
+            file_path = os.path.join(root, file)
+            # Open and read each file
+            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                try:
+                    file_content = f.read()
+                    # Check which function names are present in the file
+                    matching_functions = [func_name for func_name in function_names if func_name in file_content]
+                    if matching_functions:
+                        matching_files[file_path] = matching_functions
+                except Exception as e:
+                    print(f"Error reading file {file_path}: {e}")
+    return matching_files
+
 @app.post("/process-changed-files/")
 async def process_changed_files(body: ChangedFilesBody):
     # Extracting the changed files from the request body
     changed_files = body.changed_files
-    
     function_names = []
     
     # changed_files is a dictionary with file names as keys and patch and file content as values
     for file_name, file_data in changed_files.items():
         # Get the function names from the LLM response
-        function_names.extend(get_function_names(file_data.patch, file_data.file_content))  # Use dot notation here
-        
-    print(f"Function names extracted from the LLM response: {function_names}")
-
-    # Find test files with the required functions
-    test_files = find_test_files_with_functions("tests", function_names)
+        function_names.extend(get_function_names(file_data.patch, file_data.file_content))
     
-    # Prepare the list of JSON objects with test file paths and contents
+    print(f"Function names extracted from the LLM response: {function_names}")
+    
+    # Find test files with the required functions
+    test_files_with_functions = find_test_files_with_functions("tests", function_names)
+    
+    # Prepare the list of JSON objects with test file paths, contents, and related functions
     result = []
-    for test_file in test_files:
+    for test_file, related_functions in test_files_with_functions.items():
         with open(test_file, 'r') as f:
             file_content = f.read()
-        
         result.append({
             "test_file_path": test_file,
-            "test_file_content": file_content
+            "test_file_content": file_content,
+            "related_functions": related_functions,
+            "explanation": f"The test file {test_file} contains the related functions {related_functions} for the changed files, that is why it is selected."
         })
-
+    
     # Return the result as JSON
     return result
 
