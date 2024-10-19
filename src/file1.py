@@ -17,7 +17,7 @@ def fibonacci(n):
     """Return the nth Fibonacci number using memoization."""
     @lru_cache(maxsize=None)
     def fib(n):
-        # Check for 0 condition
+        
         if n < 0:
             raise ValueError("Fibonacci is not defined for negative numbers.")
         if n <= 1:
@@ -116,7 +116,7 @@ def matrix_multiplication(A, B):
         raise ValueError("Incompatible matrix dimensions for multiplication.")
     result = [[0 for _ in range(len(B[0]))] for _ in range(len(A))]
     
-    # Perform matrix multiplication
+
     for i in range(len(A)):
         for j in range(len(B[0])):
             for k in range(len(B)):
