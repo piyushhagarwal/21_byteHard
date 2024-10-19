@@ -24,11 +24,11 @@ def pipeline(commit_sha, test_cases_folder_path):
     return test_files
 
 
-if __name__ == "__main__":
-    commit_sha = "ad8340b6e219d9018abbd2423c5464f75ddf9ec2"
-    test_cases_folder_path = "/Users/piyushagarwal/Downloads/Piyush/Mindspark/tests"
-    result = pipeline(commit_sha, test_cases_folder_path)
-    print(result)
+# if __name__ == "__main__":
+#     commit_sha = "ad8340b6e219d9018abbd2423c5464f75ddf9ec2"
+#     test_cases_folder_path = "/Users/piyushagarwal/Downloads/Piyush/Mindspark/tests"
+#     result = pipeline(commit_sha, test_cases_folder_path)
+#     print(result)
     
     
 if __name__ == "__main__":
