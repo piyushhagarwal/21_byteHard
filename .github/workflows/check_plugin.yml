@@ -28,4 +28,4 @@ jobs:
 
       - name: Get changed files and run tests
         run: |
-          python byte_hard/get_changed_files.py ${{ env.COMMIT_SHA }}
+          python byte_hard/pipeline.py ${{ env.COMMIT_SHA }} "tests"

@@ -1,3 +1,4 @@
+import sys
 from get_changed_files import get_files_changed
 from get_LLM_function_response import get_function_names
 from get_test_cases_file import find_test_files_with_functions
@@ -26,5 +27,16 @@ def pipeline(commit_sha, test_cases_folder_path):
 if __name__ == "__main__":
     commit_sha = "ad8340b6e219d9018abbd2423c5464f75ddf9ec2"
     test_cases_folder_path = "/Users/piyushagarwal/Downloads/Piyush/Mindspark/tests"
+    result = pipeline(commit_sha, test_cases_folder_path)
+    print(result)
+    
+    
+if __name__ == "__main__":
+    
+    commit_sha = sys.argv[1]
+    test_cases_folder_path = sys.argv[2]
+
+    changed_files = get_files_changed(commit_sha)
+
     result = pipeline(commit_sha, test_cases_folder_path)
     print(result)

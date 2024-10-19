@@ -1,4 +1,5 @@
 # src/file2.py
+from .file4 import square
 def multiply(a, b):
     
     return a * b
@@ -9,7 +10,7 @@ def divide(a, b):
     return a / b
 
 def complex_operation(a, b):
-    from .file4 import square
+    
     product = multiply(a, b)
     squared_result = square(product)
     return squared_result
